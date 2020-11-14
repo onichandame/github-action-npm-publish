@@ -1,18 +1,51 @@
-# Github Actions
+# NPM Publish
 
-A template for making new github actions.
+Publish package to NPM registry.
 
 # Author
 
 [onichandame](https://onichandame.com)
 
-# Features
+# Usage
 
-- TypeScript
-- JavaScript action
-- yarn
-- Webpack bundling with minimal configuration
+```yaml
+name: deploy
+on:
+  push:
+    branches:
+      - master
+      - main
+jobs:
+  npm-publish:
+    name: Publish Package
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@master
+      - name: Set up Node.js
+        uses: actions/setup-node@master
+        with:
+          node-version: 14.x
+      - name: Build distribution files
+        runs: yarn && yarn build
+      - name: Publish
+        uses: onichandame/github-action-npm-publish:0.0.0
+        with:
+          NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }} # set this in github secrets
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # leave as it is. auto generated
 
-# Caveat
+          workspaces: 'lib1 lib2' # workspaces to publish separated by space
+          mode: 'all' # fail the CI if any package fails publishing
+```
 
-1. Github action engine only understands pure JavaScript and does not allow compilation before running the task. Therefore the bundled script in dist directory must be included in the repo.
+Environmental variables:
+
+- workspaces: to publish packages under workspaces, specify the workspace names here. multiple workspaces should be separated by space. If left blank, it is assumed that the entire repository is the package.
+- mode: `all` | `at_least_one`
+  - all: all packages must succeed publishing
+  - at_least_one: at least package must succeed publishing
+
+Note:
+
+1. Before entering the CI/CD pipeline, the version must have been bumped. Otherwise the publish will fail due to conflict of version
+2. For private packages, the flag `--access restricted` will be used. For public packages, the flag `--access public` will be used

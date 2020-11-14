@@ -1,3 +1,3 @@
-describe("demo", () => {
-  test("test", () => expect(true).toBeTruthy())
+describe('demo', () => {
+  test('test', () => expect(true).toBeTruthy())
 })

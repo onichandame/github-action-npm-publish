@@ -6,3 +6,11 @@ branding:
 runs:
   using: 'node12'
   main: 'dist/index.js'
+inputs:
+  workspaces:
+    description: 'Workspaces to publish. Undefined to publish the entire repo'
+    required: false
+  mode:
+    description: 'all: all packages are published; at_least_one: at least one package is published; any: maybe not published'
+    required: false
+    default: at_least_one
