@@ -5230,7 +5230,7 @@ function wrappy (fn, cb) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.getPackage = exports.findPath = exports.run = exports.getRootPath = exports.getWorkspaces = exports.getMode = void 0;
+exports.getTag = exports.getPackageJson = exports.findPath = exports.run = exports.getRootPath = exports.getPackages = exports.getMode = void 0;
 const tslib_1 = __webpack_require__(351);
 const core_1 = __webpack_require__(186);
 const path_1 = __webpack_require__(622);
@@ -5246,12 +5246,12 @@ exports.getMode = () => {
     else
         throw new Error(`mode ${mode} not valid.`);
 };
-exports.getWorkspaces = () => {
-    const workspaces = core_1.getInput(`workspaces`)
+exports.getPackages = () => {
+    const packages = core_1.getInput(`packages`)
         .split(` `)
         .filter(val => !!val);
-    if (workspaces.length)
-        return workspaces;
+    if (packages.length)
+        return packages;
     else
         return null;
 };
@@ -5279,9 +5279,9 @@ exports.findPath = (pattern) => {
         });
     });
 };
-exports.getPackage = (workspace) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
+exports.getPackageJson = (workspace) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
     if (workspace) {
-        const rootPackage = yield exports.getPackage();
+        const rootPackage = yield exports.getPackageJson();
         const workspaces = rootPackage.workspaces;
         if (!Array.isArray(workspaces))
             throw new Error(`workspace not found`);
@@ -5301,6 +5301,17 @@ exports.getPackage = (workspace) => tslib_1.__awaiter(void 0, void 0, void 0, fu
         }));
     }
 });
+exports.getTag = () => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
+    if (exports.getPackages()) {
+        const pkg = core_1.getInput(`tag_package`);
+        if (!pkg)
+            throw new Error(`must specify a package to track in tags in monorepo`);
+        return (yield exports.getPackageJson(pkg)).version;
+    }
+    else {
+        return (yield exports.getPackageJson()).version;
+    }
+});
 
 
 /***/ }),
@@ -5315,25 +5326,27 @@ const tslib_1 = __webpack_require__(351);
 const core_1 = __webpack_require__(186);
 const helpers_1 = __webpack_require__(15);
 const publish_1 = __webpack_require__(334);
+const tag_1 = __webpack_require__(422);
 (() => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
     try {
-        const workspaces = helpers_1.getWorkspaces();
-        core_1.info(`publishing packages ${workspaces === null || workspaces === void 0 ? void 0 : workspaces.join(`, `)}`);
+        const packages = helpers_1.getPackages();
+        core_1.info(`publishing packages ${packages === null || packages === void 0 ? void 0 : packages.join(`, `)}`);
         const failures = [];
-        if (workspaces) {
-            yield Promise.all(workspaces.map(val => publish_1.publish(val).then(code => {
+        if (packages) {
+            yield Promise.all(packages.map(val => publish_1.publish(val).then(code => {
                 if (code !== 0)
                     if (helpers_1.getMode() === 'all')
                         throw new Error(`package ${val} failed publishing`);
                     else if (helpers_1.getMode() === `at_least_one`)
                         failures.push(val);
             })));
-            if (failures.length === workspaces.length)
+            if (failures.length === packages.length)
                 throw new Error(`all packages failed publishing`);
         }
         else {
             yield publish_1.publish();
         }
+        yield tag_1.tag();
     }
     catch (e) {
         core_1.setFailed(e);
@@ -5352,13 +5365,13 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.publish = void 0;
 const tslib_1 = __webpack_require__(351);
 const helpers_1 = __webpack_require__(15);
-exports.publish = (workspace) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
+exports.publish = (pkg) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
     const config = [];
-    const packageJson = yield helpers_1.getPackage(workspace);
+    const packageJson = yield helpers_1.getPackageJson(pkg);
     if (!packageJson)
-        throw new Error(`failed to find workspace ${workspace}`);
-    if (workspace) {
-        config.concat([`workspace`, workspace]);
+        throw new Error(`failed to find workspace ${pkg}`);
+    if (pkg) {
+        config.concat([`workspace`, pkg]);
     }
     config.push(`publish`);
     config.push(`--non-interactive`);
@@ -5367,6 +5380,23 @@ exports.publish = (workspace) => tslib_1.__awaiter(void 0, void 0, void 0, funct
     else
         config.push(`--access public`);
     return helpers_1.run(`yarn`, config);
+});
+
+
+/***/ }),
+
+/***/ 422:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.tag = void 0;
+const tslib_1 = __webpack_require__(351);
+const helpers_1 = __webpack_require__(15);
+exports.tag = () => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
+    const tag = yield helpers_1.getTag();
+    yield helpers_1.run(`git`, [`tag`, tag]);
 });
 
 

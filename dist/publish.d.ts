@@ -1,1 +1,1 @@
-export declare const publish: (workspace?: string | undefined) => Promise<number>;
+export declare const publish: (pkg?: string | undefined) => Promise<number>;
