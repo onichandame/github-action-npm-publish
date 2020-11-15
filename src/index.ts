@@ -1,15 +1,16 @@
 import { info, setFailed } from '@actions/core'
 
-import { getWorkspaces, getMode } from './helpers'
+import { getPackages, getMode } from './helpers'
 import { publish } from './publish'
+import { tag } from 'tag'
 ;(async () => {
   try {
-    const workspaces = getWorkspaces()
-    info(`publishing packages ${workspaces?.join(`, `)}`)
+    const packages = getPackages()
+    info(`publishing packages ${packages?.join(`, `)}`)
     const failures: string[] = []
-    if (workspaces) {
+    if (packages) {
       await Promise.all(
-        workspaces.map(val =>
+        packages.map(val =>
           publish(val).then(code => {
             if (code !== 0)
               if (getMode() === 'all')
@@ -18,11 +19,12 @@ import { publish } from './publish'
           })
         )
       )
-      if (failures.length === workspaces.length)
+      if (failures.length === packages.length)
         throw new Error(`all packages failed publishing`)
     } else {
       await publish()
     }
+    await tag()
   } catch (e) {
     setFailed(e)
   }

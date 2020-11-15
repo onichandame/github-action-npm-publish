@@ -14,11 +14,11 @@ export const getMode = () => {
   else throw new Error(`mode ${mode} not valid.`)
 }
 
-export const getWorkspaces = () => {
-  const workspaces = getInput(`workspaces`)
+export const getPackages = () => {
+  const packages = getInput(`packages`)
     .split(` `)
     .filter(val => !!val)
-  if (workspaces.length) return workspaces
+  if (packages.length) return packages
   else return null
 }
 
@@ -44,9 +44,9 @@ export const findPath = (pattern: string): Promise<string[]> => {
   })
 }
 
-export const getPackage = async (workspace?: string) => {
+export const getPackageJson = async (workspace?: string) => {
   if (workspace) {
-    const rootPackage = await getPackage()
+    const rootPackage = await getPackageJson()
     const workspaces = rootPackage.workspaces
     if (!Array.isArray(workspaces)) throw new Error(`workspace not found`)
     const paths: string[] = []
@@ -74,5 +74,16 @@ export const getPackage = async (workspace?: string) => {
         encoding: 'utf8'
       })
     )
+  }
+}
+
+export const getTag = async () => {
+  if (getPackages()) {
+    const pkg = getInput(`tag_package`)
+    if (!pkg)
+      throw new Error(`must specify a package to track in tags in monorepo`)
+    return (await getPackageJson(pkg)).version
+  } else {
+    return (await getPackageJson()).version
   }
 }

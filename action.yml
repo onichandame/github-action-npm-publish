@@ -7,10 +7,13 @@ runs:
   using: 'node12'
   main: 'dist/index.js'
 inputs:
-  workspaces:
-    description: 'Workspaces to publish. Undefined to publish the entire repo'
+  packages:
+    description: 'Packages to publish in the monorepo. Undefined to publish the entire repo'
     required: false
   mode:
     description: 'all: all packages are published; at_least_one: at least one package is published; any: maybe not published'
     required: false
     default: at_least_one
+  tag_package:
+    description: 'the name of the package in the monorepo tracked by the tag name'
+    required: false

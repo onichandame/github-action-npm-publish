@@ -1,6 +1,6 @@
 # NPM Publish
 
-Publish package to NPM registry.
+Publish package to NPM registry. Support YARN workspaces.
 
 # Author
 
@@ -35,18 +35,20 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # leave as it is. auto generated
 
         with:
-          workspaces: 'lib1 lib2' # workspaces to publish separated by space
+          packages: 'lib1 lib2' # workspaces to publish separated by space
           mode: 'all' # fail the CI if any package fails publishing
+          tag_package: 'lib1' # create tag based on package
 ```
 
 Environmental variables:
 
-- workspaces: to publish packages under workspaces, specify the workspace names here. multiple workspaces should be separated by space. If left blank, it is assumed that the entire repository is the package.
+- packages: to publish packages in the monorepo, specify the package names here. multiple packages should be separated by space. If left blank, it is assumed that the entire repository is the package.
 - mode: `all` | `at_least_one`
   - all: all packages must succeed publishing
-  - at_least_one: at least package must succeed publishing
+  - at_least_one: at least one package must succeed publishing
+- tag_package: the name of the package being tracked in the git tag names.
 
 Note:
 
-1. Before entering the CI/CD pipeline, the version must have been bumped. Otherwise the publish will fail due to conflict of version
+1. Before entering the CI/CD pipeline, the version must have been already bumped. Otherwise the publish will fail due to conflict of version
 2. For private packages, the flag `--access restricted` will be used. For public packages, the flag `--access public` will be used
