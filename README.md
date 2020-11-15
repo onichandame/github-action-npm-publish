@@ -30,10 +30,11 @@ jobs:
         runs: yarn && yarn build
       - name: Publish
         uses: onichandame/github-action-npm-publish:0.0.0
-        with:
+        env:
           NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }} # set this in github secrets
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # leave as it is. auto generated
 
+        with:
           workspaces: 'lib1 lib2' # workspaces to publish separated by space
           mode: 'all' # fail the CI if any package fails publishing
 ```

@@ -23,7 +23,9 @@ export const getWorkspaces = () => {
 }
 
 export const getRootPath = () => {
-  return getInput(`GITHUB_WORKSPACE`)
+  const root = process.env.GITHUB_WORKSPACE
+  if (!root) throw new Error(`workspace not found`)
+  return root
 }
 
 export const run = (...args: Parameters<typeof exec>) => {
