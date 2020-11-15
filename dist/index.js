@@ -5270,12 +5270,12 @@ exports.run = (...args) => {
     return exec_1.exec(...args);
 };
 exports.findPath = (pattern) => {
-    return new Promise((resolve, reject) => {
+    return new Promise((r, j) => {
         glob_1.default(pattern, (e, matches) => {
             if (e)
-                reject(e);
+                j(e);
             else
-                resolve(matches);
+                r(matches);
         });
     });
 };

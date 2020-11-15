@@ -36,10 +36,10 @@ export const run = (...args: Parameters<typeof exec>) => {
 }
 
 export const findPath = (pattern: string): Promise<string[]> => {
-  return new Promise((resolve, reject) => {
+  return new Promise((r, j) => {
     glob(pattern, (e, matches) => {
-      if (e) reject(e)
-      else resolve(matches)
+      if (e) j(e)
+      else r(matches)
     })
   })
 }
