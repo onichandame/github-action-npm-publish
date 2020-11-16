@@ -1,4 +1,4 @@
-import { getInput } from '@actions/core'
+import { getInput, info } from '@actions/core'
 import { resolve } from 'path'
 import { promises as fsp } from 'fs'
 import { exec } from '@actions/exec'
@@ -69,6 +69,7 @@ export const getPackageJson = async (workspace?: string) => {
     )
     return packages.find(val => val.name === workspace)
   } else {
+    info(`root: ${getRootPath()}`)
     return JSON.parse(
       await fsp.readFile(resolve(getRootPath(), `package.json`), {
         encoding: 'utf8'

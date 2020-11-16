@@ -5296,6 +5296,7 @@ exports.getPackageJson = (workspace) => tslib_1.__awaiter(void 0, void 0, void 0
         return packages.find(val => val.name === workspace);
     }
     else {
+        core_1.info(`root: ${exports.getRootPath()}`);
         return JSON.parse(yield fs_1.promises.readFile(__webpack_require__.ab + "github-action-npm-publish/" + exports.getRootPath() + '/package.json', {
             encoding: 'utf8'
         }));
