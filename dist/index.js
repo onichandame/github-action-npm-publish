@@ -5296,10 +5296,6 @@ exports.getPackageJson = (workspace) => tslib_1.__awaiter(void 0, void 0, void 0
         return packages.find(val => val.name === workspace);
     }
     else {
-        core_1.info(`root: ${exports.getRootPath()}`);
-        const packJson = path_1.join(exports.getRootPath(), `package.json`);
-        core_1.info(`package.json: ${packJson}`);
-        core_1.info(fs_1.existsSync(packJson) ? `exists` : `not found`);
         return JSON.parse(yield fs_1.promises.readFile(path_1.join(exports.getRootPath(), `package.json`), {
             encoding: 'utf8'
         }));
@@ -5401,7 +5397,7 @@ const tslib_1 = __webpack_require__(351);
 const helpers_1 = __webpack_require__(15);
 exports.tag = () => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
     const tag = yield helpers_1.getTag();
-    yield helpers_1.run(`git`, [`tag`, tag]);
+    yield helpers_1.run(`git`, [`tag`, `-a`, `-m`, `Release ${tag}`, `v${tag}`]);
 });
 
 
