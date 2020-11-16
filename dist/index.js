@@ -5330,9 +5330,9 @@ const tag_1 = __webpack_require__(422);
 (() => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
     try {
         const packages = helpers_1.getPackages();
-        core_1.info(`publishing packages ${packages === null || packages === void 0 ? void 0 : packages.join(`, `)}`);
         const failures = [];
         if (packages) {
+            core_1.info(`publishing packages ${packages === null || packages === void 0 ? void 0 : packages.join(`, `)}`);
             yield Promise.all(packages.map(val => publish_1.publish(val).then(code => {
                 if (code !== 0)
                     if (helpers_1.getMode() === 'all')
@@ -5344,6 +5344,7 @@ const tag_1 = __webpack_require__(422);
                 throw new Error(`all packages failed publishing`);
         }
         else {
+            core_1.info(`publishing package ${(yield helpers_1.getPackageJson()).name}`);
             yield publish_1.publish();
         }
         yield tag_1.tag();

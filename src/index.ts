@@ -1,14 +1,14 @@
 import { info, setFailed } from '@actions/core'
 
-import { getPackages, getMode } from './helpers'
+import { getPackages, getMode, getPackageJson } from './helpers'
 import { publish } from './publish'
 import { tag } from 'tag'
 ;(async () => {
   try {
     const packages = getPackages()
-    info(`publishing packages ${packages?.join(`, `)}`)
     const failures: string[] = []
     if (packages) {
+      info(`publishing packages ${packages?.join(`, `)}`)
       await Promise.all(
         packages.map(val =>
           publish(val).then(code => {
@@ -22,6 +22,7 @@ import { tag } from 'tag'
       if (failures.length === packages.length)
         throw new Error(`all packages failed publishing`)
     } else {
+      info(`publishing package ${(await getPackageJson()).name}`)
       await publish()
     }
     await tag()
