@@ -1,6 +1,6 @@
 import { getInput, info } from '@actions/core'
 import { resolve } from 'path'
-import { promises as fsp } from 'fs'
+import { existsSync, promises as fsp } from 'fs'
 import { exec } from '@actions/exec'
 import glob from 'glob'
 
@@ -70,6 +70,9 @@ export const getPackageJson = async (workspace?: string) => {
     return packages.find(val => val.name === workspace)
   } else {
     info(`root: ${getRootPath()}`)
+    const packJson = resolve(getRootPath(), `package.json`)
+    info(`package.json: ${packJson}`)
+    info(existsSync(packJson) ? `exists` : `not found`)
     return JSON.parse(
       await fsp.readFile(resolve(getRootPath(), `package.json`), {
         encoding: 'utf8'
