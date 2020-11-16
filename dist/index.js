@@ -5286,10 +5286,10 @@ exports.getPackageJson = (workspace) => tslib_1.__awaiter(void 0, void 0, void 0
         if (!Array.isArray(workspaces))
             throw new Error(`workspace not found`);
         const paths = [];
-        yield Promise.all(workspaces.map((path) => tslib_1.__awaiter(void 0, void 0, void 0, function* () { return paths.concat(yield exports.findPath(path_1.resolve(exports.getRootPath(), path))); })));
+        yield Promise.all(workspaces.map((path) => tslib_1.__awaiter(void 0, void 0, void 0, function* () { return paths.concat(yield exports.findPath(path_1.join(exports.getRootPath(), path))); })));
         const packages = [];
         yield Promise.all(paths.map((path) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
-            packages.push(JSON.parse(yield fs_1.promises.readFile(__webpack_require__.ab + "github-action-npm-publish/" + path + '/package.json', {
+            packages.push(JSON.parse(yield fs_1.promises.readFile(path_1.join(path, `package.json`), {
                 encoding: 'utf8'
             })));
         })));
@@ -5297,10 +5297,10 @@ exports.getPackageJson = (workspace) => tslib_1.__awaiter(void 0, void 0, void 0
     }
     else {
         core_1.info(`root: ${exports.getRootPath()}`);
-        const packJson = __webpack_require__.ab + "github-action-npm-publish/" + exports.getRootPath() + '/package.json';
+        const packJson = path_1.join(exports.getRootPath(), `package.json`);
         core_1.info(`package.json: ${packJson}`);
         core_1.info(fs_1.existsSync(packJson) ? `exists` : `not found`);
-        return JSON.parse(yield fs_1.promises.readFile(__webpack_require__.ab + "github-action-npm-publish/" + exports.getRootPath() + '/package.json', {
+        return JSON.parse(yield fs_1.promises.readFile(path_1.join(exports.getRootPath(), `package.json`), {
             encoding: 'utf8'
         }));
     }
