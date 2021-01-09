@@ -5287,6 +5287,9 @@ exports.getPackageJson = (workspace) => tslib_1.__awaiter(void 0, void 0, void 0
             throw new Error(`workspace not found`);
         const paths = [];
         yield Promise.all(workspaces.map((path) => tslib_1.__awaiter(void 0, void 0, void 0, function* () { return paths.concat(yield exports.findPath(path_1.join(exports.getRootPath(), path))); })));
+        console.log(`root: ${exports.getRootPath()}`);
+        console.log(`workspaces: ${workspaces}`);
+        console.log(`packages: ${paths}`);
         const packages = [];
         yield Promise.all(paths.map((path) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
             packages.push(JSON.parse(yield fs_1.promises.readFile(path_1.join(path, `package.json`), {
