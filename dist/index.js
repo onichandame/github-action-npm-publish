@@ -1860,6 +1860,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.getTag = exports.getPackageJson = exports.getPackagePaths = exports.run = exports.getRootPath = exports.getPackages = exports.getMode = void 0;
 const tslib_1 = __webpack_require__(351);
 const core_1 = __webpack_require__(186);
+//import { Writable } from 'stream'
 const path_1 = __webpack_require__(622);
 const fs_1 = __webpack_require__(747);
 const exec_1 = __webpack_require__(514);
@@ -1899,6 +1900,8 @@ exports.getPackagePaths = () => tslib_1.__awaiter(void 0, void 0, void 0, functi
     const root = exports.getRootPath();
     const rawLines = [];
     if ((yield exec_1.exec(`yarn`, [`workspaces`, `info`], {
+        //outStream: new Writable(),
+        silent: true,
         cwd: root,
         listeners: { stdout: data => rawLines.push(data.toString()) }
     })) !== 0)
@@ -1913,6 +1916,7 @@ exports.getPackagePaths = () => tslib_1.__awaiter(void 0, void 0, void 0, functi
 exports.getPackageJson = (workspace) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
     if (workspace) {
         const pkgPaths = yield exports.getPackagePaths();
+        console.log(`pkgPaths: ${pkgPaths}`);
         const packages = [];
         yield Promise.all(pkgPaths.map((path) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
             packages.push(JSON.parse(yield fs_1.promises.readFile(path_1.join(path, `package.json`), {
