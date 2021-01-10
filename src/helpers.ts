@@ -1,5 +1,4 @@
 import { getInput } from '@actions/core'
-//import { Writable } from 'stream'
 import { join } from 'path'
 import { promises as fsp } from 'fs'
 import { exec } from '@actions/exec'
@@ -40,7 +39,6 @@ export const getPackagePaths = async (): Promise<string[]> => {
   const rawLines: string[] = []
   if (
     (await exec(`yarn`, [`workspaces`, `info`], {
-      //outStream: new Writable(),
       silent: true,
       cwd: root,
       listeners: { stdout: data => rawLines.push(data.toString()) }

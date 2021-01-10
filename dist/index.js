@@ -1860,7 +1860,6 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.getTag = exports.getPackageJson = exports.getPackagePaths = exports.run = exports.getRootPath = exports.getPackages = exports.getMode = void 0;
 const tslib_1 = __webpack_require__(351);
 const core_1 = __webpack_require__(186);
-//import { Writable } from 'stream'
 const path_1 = __webpack_require__(622);
 const fs_1 = __webpack_require__(747);
 const exec_1 = __webpack_require__(514);
@@ -1900,7 +1899,6 @@ exports.getPackagePaths = () => tslib_1.__awaiter(void 0, void 0, void 0, functi
     const root = exports.getRootPath();
     const rawLines = [];
     if ((yield exec_1.exec(`yarn`, [`workspaces`, `info`], {
-        //outStream: new Writable(),
         silent: true,
         cwd: root,
         listeners: { stdout: data => rawLines.push(data.toString()) }
@@ -2002,6 +2000,7 @@ exports.publish = (pkg) => tslib_1.__awaiter(void 0, void 0, void 0, function* (
     const packageJson = yield helpers_1.getPackageJson(pkg);
     if (!packageJson)
         throw new Error(`failed to find workspace ${pkg}`);
+    console.log(`pkg: ${pkg}`);
     if (pkg) {
         config.concat([`workspace`, pkg]);
     }

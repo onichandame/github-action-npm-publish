@@ -4,6 +4,7 @@ export const publish = async (pkg?: string) => {
   const config: Parameters<typeof run>[1] = []
   const packageJson = await getPackageJson(pkg)
   if (!packageJson) throw new Error(`failed to find workspace ${pkg}`)
+  console.log(`pkg: ${pkg}`)
   if (pkg) {
     config.concat([`workspace`, pkg])
   }
