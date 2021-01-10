@@ -7,6 +7,7 @@ import { tag } from 'tag'
   try {
     const packages = getPackages()
     const failures: string[] = []
+    console.log(`packages: ${packages}`)
     if (packages) {
       info(`publishing packages ${packages?.join(`, `)}`)
       await Promise.all(

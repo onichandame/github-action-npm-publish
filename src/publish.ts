@@ -11,5 +11,6 @@ export const publish = async (pkg?: string) => {
   config.push(`--non-interactive`)
   if (packageJson.private) config.push(`--access restricted`)
   else config.push(`--access public`)
+  console.log(`config: ${config}`)
   return run(`yarn`, config)
 }

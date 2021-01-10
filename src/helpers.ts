@@ -57,8 +57,6 @@ export const getPackagePaths = async (): Promise<string[]> => {
 export const getPackageJson = async (workspace?: string) => {
   if (workspace) {
     const pkgPaths = await getPackagePaths()
-    console.log(`root: ${getRootPath()}`)
-    console.log(`workspaces: ${pkgPaths}`)
     const packages: any[] = []
     await Promise.all(
       pkgPaths.map(async path => {
