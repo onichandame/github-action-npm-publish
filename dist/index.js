@@ -2002,7 +2002,7 @@ exports.publish = (pkg) => tslib_1.__awaiter(void 0, void 0, void 0, function* (
         throw new Error(`failed to find workspace ${pkg}`);
     console.log(`pkg: ${pkg}`);
     if (pkg) {
-        config.concat([`workspace`, pkg]);
+        config.push(...[`workspace`, pkg]);
     }
     config.push(`publish`);
     config.push(`--non-interactive`);

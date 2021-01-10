@@ -6,7 +6,7 @@ export const publish = async (pkg?: string) => {
   if (!packageJson) throw new Error(`failed to find workspace ${pkg}`)
   console.log(`pkg: ${pkg}`)
   if (pkg) {
-    config.concat([`workspace`, pkg])
+    config.push(...[`workspace`, pkg])
   }
   config.push(`publish`)
   config.push(`--non-interactive`)
