@@ -1914,7 +1914,6 @@ exports.getPackagePaths = () => tslib_1.__awaiter(void 0, void 0, void 0, functi
 exports.getPackageJson = (workspace) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
     if (workspace) {
         const pkgPaths = yield exports.getPackagePaths();
-        console.log(`pkgPaths: ${pkgPaths}`);
         const packages = [];
         yield Promise.all(pkgPaths.map((path) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
             packages.push(JSON.parse(yield fs_1.promises.readFile(path_1.join(path, `package.json`), {
@@ -1959,9 +1958,8 @@ const tag_1 = __webpack_require__(422);
     try {
         const packages = helpers_1.getPackages();
         const failures = [];
-        console.log(`packages: ${packages}`);
         if (packages) {
-            core_1.info(`publishing packages ${packages === null || packages === void 0 ? void 0 : packages.join(`, `)}`);
+            core_1.info(`publishing packages ${packages.join(`, `)}`);
             yield Promise.all(packages.map(val => publish_1.publish(val).then(code => {
                 if (code !== 0)
                     if (helpers_1.getMode() === 'all')
@@ -2000,7 +1998,6 @@ exports.publish = (pkg) => tslib_1.__awaiter(void 0, void 0, void 0, function* (
     const packageJson = yield helpers_1.getPackageJson(pkg);
     if (!packageJson)
         throw new Error(`failed to find workspace ${pkg}`);
-    console.log(`pkg: ${pkg}`);
     if (pkg) {
         config.push(...[`workspace`, pkg]);
     }
@@ -2010,7 +2007,6 @@ exports.publish = (pkg) => tslib_1.__awaiter(void 0, void 0, void 0, function* (
         config.push(`--access restricted`);
     else
         config.push(`--access public`);
-    console.log(`config: ${config}`);
     return helpers_1.run(`yarn`, config);
 });
 
