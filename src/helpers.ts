@@ -2,7 +2,6 @@ import { getInput } from '@actions/core'
 import { join } from 'path'
 import { promises as fsp } from 'fs'
 import { exec } from '@actions/exec'
-import glob from 'glob'
 
 const modes = <const>['all', 'at_least_one']
 type Mode = typeof modes[number]
@@ -35,32 +34,34 @@ export const run = (...args: Parameters<typeof exec>) => {
   return exec(...args)
 }
 
-export const findPath = (pattern: string): Promise<string[]> => {
-  return new Promise((r, j) => {
-    glob(pattern, (e, matches) => {
-      if (e) j(e)
-      else r(matches)
-    })
-  })
+export const getPackagePaths = async (): Promise<string[]> => {
+  const root = getRootPath()
+  const rawLines: string[] = []
+  if (
+    (await exec(`yarn`, [`workspaces`, `info`], {
+      cwd: root,
+      listeners: { stdout: data => rawLines.push(data.toString()) }
+    })) !== 0
+  )
+    return [root]
+  rawLines.shift()
+  rawLines.pop()
+  const rawJson = JSON.parse(rawLines.join(``))
+  const result: string[] = []
+  Object.values(rawJson).forEach((wsp: any) =>
+    result.push(join(root, wsp.location))
+  )
+  return result.filter(val => !!val)
 }
 
 export const getPackageJson = async (workspace?: string) => {
   if (workspace) {
-    const rootPackage = await getPackageJson()
-    const workspaces = rootPackage.workspaces
-    if (!Array.isArray(workspaces)) throw new Error(`workspace not found`)
-    const paths: string[] = []
-    await Promise.all(
-      workspaces.map(async path =>
-        paths.concat(await findPath(join(getRootPath(), path)))
-      )
-    )
+    const pkgPaths = await getPackagePaths()
     console.log(`root: ${getRootPath()}`)
-    console.log(`workspaces: ${workspaces}`)
-    console.log(`packages: ${paths}`)
+    console.log(`workspaces: ${pkgPaths}`)
     const packages: any[] = []
     await Promise.all(
-      paths.map(async path => {
+      pkgPaths.map(async path => {
         packages.push(
           JSON.parse(
             await fsp.readFile(join(path, `package.json`), {
