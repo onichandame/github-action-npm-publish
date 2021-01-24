@@ -7,6 +7,11 @@ const modes = <const>['all', 'at_least_one']
 type Mode = typeof modes[number]
 const isMode = (raw: any): raw is Mode => modes.includes(raw)
 
+const eventFile = process.env.GITHUB_EVENT_PATH || '/github/workflow/event.json'
+
+export const getEventFile = () =>
+  fsp.readFile(eventFile, `utf8`).then(raw => JSON.parse(raw))
+
 export const getMode = () => {
   const mode = getInput(`mode`)
   if (isMode(mode)) return mode

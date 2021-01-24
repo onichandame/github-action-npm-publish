@@ -1,3 +1,4 @@
+export declare const getEventFile: () => Promise<any>;
 export declare const getMode: () => "all" | "at_least_one";
 export declare const getPackages: () => string[] | null;
 export declare const getRootPath: () => string;

@@ -1857,7 +1857,7 @@ var __createBinding;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.getTag = exports.getPackageJson = exports.getPackagePaths = exports.run = exports.getRootPath = exports.getPackages = exports.getMode = void 0;
+exports.getTag = exports.getPackageJson = exports.getPackagePaths = exports.run = exports.getRootPath = exports.getPackages = exports.getMode = exports.getEventFile = void 0;
 const tslib_1 = __webpack_require__(351);
 const core_1 = __webpack_require__(186);
 const path_1 = __webpack_require__(622);
@@ -1865,6 +1865,8 @@ const fs_1 = __webpack_require__(747);
 const exec_1 = __webpack_require__(514);
 const modes = ['all', 'at_least_one'];
 const isMode = (raw) => modes.includes(raw);
+const eventFile = process.env.GITHUB_EVENT_PATH || '/github/workflow/event.json';
+exports.getEventFile = () => fs_1.promises.readFile(eventFile, `utf8`).then(raw => JSON.parse(raw));
 exports.getMode = () => {
     const mode = core_1.getInput(`mode`);
     if (isMode(mode))
@@ -2024,9 +2026,11 @@ const tslib_1 = __webpack_require__(351);
 const helpers_1 = __webpack_require__(15);
 exports.tag = () => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
     const tag = yield helpers_1.getTag();
+    const eventObj = yield helpers_1.getEventFile();
+    const { name, email } = eventObj.repository.owner;
     // setup committer
-    yield helpers_1.run(`git`, [`config`, `user.email`, `npmpublish@npmpublish.io`]);
-    yield helpers_1.run(`git`, [`config`, `user.name`, `npmpublish`]);
+    yield helpers_1.run(`git`, [`config`, `user.email`, email]);
+    yield helpers_1.run(`git`, [`config`, `user.name`, name]);
     yield helpers_1.run(`git`, [`tag`, `-a`, `-m`, `Release ${tag}`, `v${tag}`]);
 });
 
