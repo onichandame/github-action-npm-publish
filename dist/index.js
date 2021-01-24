@@ -2024,6 +2024,9 @@ const tslib_1 = __webpack_require__(351);
 const helpers_1 = __webpack_require__(15);
 exports.tag = () => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
     const tag = yield helpers_1.getTag();
+    // setup committer
+    yield helpers_1.run(`git`, [`config`, `user.email`, `npmpublish@npmpublish.io`]);
+    yield helpers_1.run(`git`, [`config`, `user.name`, `npmpublish`]);
     yield helpers_1.run(`git`, [`tag`, `-a`, `-m`, `Release ${tag}`, `v${tag}`]);
 });
 
