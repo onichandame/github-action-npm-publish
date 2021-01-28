@@ -7,5 +7,5 @@ export const tag = async () => {
   // setup committer
   await run(`git`, [`config`, `user.email`, email])
   await run(`git`, [`config`, `user.name`, name])
-  await run(`git`, [`tag`, `-a`, `-m`, `Release ${tag}`, `v${tag}`])
+  await run(`git`, [`tag`, `-a`, `-m`, `'Release ${tag}'`, `v${tag}`])
 }
