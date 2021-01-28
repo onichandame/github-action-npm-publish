@@ -2031,7 +2031,7 @@ exports.tag = () => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
     // setup committer
     yield helpers_1.run(`git`, [`config`, `user.email`, email]);
     yield helpers_1.run(`git`, [`config`, `user.name`, name]);
-    yield helpers_1.run(`git`, [`tag`, `-a`, `-m`, `Release ${tag}`, `v${tag}`]);
+    yield helpers_1.run(`git`, [`tag`, `-a`, `-m`, `'Release ${tag}'`, `v${tag}`]);
 });
 
 
