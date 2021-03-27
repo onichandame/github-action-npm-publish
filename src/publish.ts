@@ -9,7 +9,8 @@ export const publish = async (pkg?: string) => {
   }
   config.push(`publish`)
   config.push(`--non-interactive`)
-  if (packageJson.private) config.push(`--access restricted`)
-  else config.push(`--access public`)
+  config.push(`--access`)
+  if (packageJson.private) config.push(`restricted`)
+  else config.push(`public`)
   return run(`yarn`, config)
 }

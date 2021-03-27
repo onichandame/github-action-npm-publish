@@ -2005,10 +2005,11 @@ exports.publish = (pkg) => tslib_1.__awaiter(void 0, void 0, void 0, function* (
     }
     config.push(`publish`);
     config.push(`--non-interactive`);
+    config.push(`--access`);
     if (packageJson.private)
-        config.push(`--access restricted`);
+        config.push(`restricted`);
     else
-        config.push(`--access public`);
+        config.push(`public`);
     return helpers_1.run(`yarn`, config);
 });
 
@@ -2032,6 +2033,7 @@ exports.tag = () => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
     yield helpers_1.run(`git`, [`config`, `user.email`, email]);
     yield helpers_1.run(`git`, [`config`, `user.name`, name]);
     yield helpers_1.run(`git`, [`tag`, `-a`, `-m`, `'Release ${tag}'`, `v${tag}`]);
+    yield helpers_1.run(`git`, [`push`, `--tags`]);
 });
 
 
