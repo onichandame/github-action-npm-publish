@@ -58,4 +58,4 @@ Note:
 For yarn v2 users, some tweaks in the project are neccessary:
 
 1. add to the `publishConfig` entry of `package.json`: `{"registry": "https://registry.npmjs.org"}`
-2. add line to the `.yarnrc.yml`: `npmAuthToken: "${NPM_AUTH_TOKEN}"`
+2. add line to the `.yarnrc.yml`: `npmAuthToken: "${NPM_AUTH_TOKEN-fallback}"`
