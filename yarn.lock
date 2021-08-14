@@ -24,6 +24,11 @@
   resolved "http://npm-verdaccio.verdaccio.svc.cluster.local:4873/@types%2fminimatch/-/minimatch-3.0.5.tgz#1001cc5e6a3704b83c236027e77f2f58ea010f40"
   integrity sha1-EAHMXmo3BLg8I2An538vWOoBD0A=
 
+"@types/node@^16.6.1":
+  version "16.6.1"
+  resolved "http://npm-verdaccio.verdaccio.svc.cluster.local:4873/@types%2fnode/-/node-16.6.1.tgz#aee62c7b966f55fc66c7b6dfa1d58db2a616da61"
+  integrity sha1-ruYse5ZvVfxmx7bfodWNsqYW2mE=
+
 "@vercel/ncc@^0.29.1":
   version "0.29.1"
   resolved "http://npm-verdaccio.verdaccio.svc.cluster.local:4873/@vercel%2fncc/-/ncc-0.29.1.tgz#d62b1b9508a2bc7a822791ff6a6eb3e08a2cfdd7"

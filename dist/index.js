@@ -2241,7 +2241,7 @@ const getPackagePaths = () => (0,tslib.__awaiter)(void 0, void 0, void 0, functi
     if ((yield (0,exec.exec)(`yarn`, [`workspaces`, `info`], {
         silent: true,
         cwd: root,
-        listeners: { stdout: data => rawLines.push(data.toString()) }
+        listeners: { stdout: data => rawLines.push(data.toString()) },
     })) !== 0)
         return [root];
     rawLines.shift();
@@ -2257,14 +2257,14 @@ const getPackageJson = (workspace) => (0,tslib.__awaiter)(void 0, void 0, void 0
         const packages = [];
         yield Promise.all(pkgPaths.map((path) => (0,tslib.__awaiter)(void 0, void 0, void 0, function* () {
             packages.push(JSON.parse(yield external_fs_.promises.readFile((0,external_path_.join)(path, `package.json`), {
-                encoding: 'utf8'
+                encoding: 'utf8',
             })));
         })));
         return packages.find(val => val.name === workspace);
     }
     else {
         return JSON.parse(yield external_fs_.promises.readFile((0,external_path_.join)(getRootPath(), `package.json`), {
-            encoding: 'utf8'
+            encoding: 'utf8',
         }));
     }
 });
@@ -2289,6 +2289,7 @@ const getYarnVersion = () => (0,tslib.__awaiter)(void 0, void 0, void 0, functio
 
 
 const publish = (pkg) => (0,tslib.__awaiter)(void 0, void 0, void 0, function* () {
+    const yarnVer = yield getYarnVersion();
     const config = [];
     const packageJson = yield getPackageJson(pkg);
     if (!packageJson)
@@ -2296,10 +2297,11 @@ const publish = (pkg) => (0,tslib.__awaiter)(void 0, void 0, void 0, function* (
     if (pkg) {
         config.push(...[`workspace`, pkg]);
     }
-    if ((yield getYarnVersion()).major !== `1`)
+    if (yarnVer.major !== `1`)
         config.push(`npm`);
     config.push(`publish`);
-    config.push(`--non-interactive`);
+    if (yarnVer.major === `1`)
+        config.push(`--non-interactive`);
     config.push(`--access`);
     if (packageJson.private)
         config.push(`restricted`);
