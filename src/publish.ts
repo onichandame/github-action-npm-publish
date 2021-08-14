@@ -1,4 +1,4 @@
-import { run, getPackageJson } from './helpers'
+import { getYarnVersion, run, getPackageJson } from './helpers'
 
 export const publish = async (pkg?: string) => {
   const config: Parameters<typeof run>[1] = []
@@ -7,6 +7,7 @@ export const publish = async (pkg?: string) => {
   if (pkg) {
     config.push(...[`workspace`, pkg])
   }
+  if ((await getYarnVersion()).major !== `1`) config.push(`npm`)
   config.push(`publish`)
   config.push(`--non-interactive`)
   config.push(`--access`)

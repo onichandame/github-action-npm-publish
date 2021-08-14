@@ -1,1 +1,1 @@
-export declare const publish: (pkg?: string | undefined) => Promise<number>;
+export declare const publish: (pkg?: string | undefined) => Promise<import("@actions/exec").ExecOutput>;

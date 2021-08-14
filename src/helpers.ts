@@ -1,7 +1,7 @@
 import { getInput } from '@actions/core'
 import { join } from 'path'
 import { promises as fsp } from 'fs'
-import { exec } from '@actions/exec'
+import { getExecOutput, exec } from '@actions/exec'
 
 const modes = <const>['all', 'at_least_one']
 type Mode = typeof modes[number]
@@ -36,7 +36,7 @@ export const run = (...args: Parameters<typeof exec>) => {
   if (!args[1]) args[1] = []
   if (!args[2]) args[2] = {}
   args[2].cwd = getRootPath()
-  return exec(...args)
+  return getExecOutput(...args)
 }
 
 export const getPackagePaths = async (): Promise<string[]> => {
@@ -46,7 +46,7 @@ export const getPackagePaths = async (): Promise<string[]> => {
     (await exec(`yarn`, [`workspaces`, `info`], {
       silent: true,
       cwd: root,
-      listeners: { stdout: data => rawLines.push(data.toString()) }
+      listeners: { stdout: data => rawLines.push(data.toString()) },
     })) !== 0
   )
     return [root]
@@ -69,7 +69,7 @@ export const getPackageJson = async (workspace?: string) => {
         packages.push(
           JSON.parse(
             await fsp.readFile(join(path, `package.json`), {
-              encoding: 'utf8'
+              encoding: 'utf8',
             })
           )
         )
@@ -79,7 +79,7 @@ export const getPackageJson = async (workspace?: string) => {
   } else {
     return JSON.parse(
       await fsp.readFile(join(getRootPath(), `package.json`), {
-        encoding: 'utf8'
+        encoding: 'utf8',
       })
     )
   }
@@ -94,4 +94,10 @@ export const getTag = async () => {
   } else {
     return (await getPackageJson()).version
   }
+}
+
+export const getYarnVersion = async () => {
+  const output = await run(`yarn`, [`--version`])
+  const version = output.stdout.split(`.`)
+  return { major: version[0], minor: version[1], patch: version[2] }
 }

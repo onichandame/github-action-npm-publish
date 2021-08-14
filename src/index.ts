@@ -11,8 +11,8 @@ import { tag } from 'tag'
       info(`publishing packages ${packages.join(`, `)}`)
       await Promise.all(
         packages.map(val =>
-          publish(val).then(code => {
-            if (code !== 0)
+          publish(val).then(output => {
+            if (output.exitCode !== 0)
               if (getMode() === 'all')
                 throw new Error(`package ${val} failed publishing`)
               else if (getMode() === `at_least_one`) failures.push(val)
